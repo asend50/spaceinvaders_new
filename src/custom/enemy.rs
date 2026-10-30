@@ -43,6 +43,7 @@ impl Enemy {
         }
     }
 
+
     pub fn get_image(&self) -> &StillImage {
         &self.image
     }

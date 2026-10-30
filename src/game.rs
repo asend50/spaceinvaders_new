@@ -57,9 +57,9 @@ pub async fn run(tm: TextureManager, mut score: i32, mut highscore: i32) -> (Str
     let mut shoot_cooldown = 0.0;
     let mut columns;
     let mut rows;
+    let mut enemy_speed = 0.2;
     let spacing_x = screen_width() * 0.08;
     let spacing_y = screen_height() * 0.09;
-    let mut enemy_dir = 0.2;
     let min_x = 230.0;
     let max_x = 740.0;
     let random_columns: i32 = rng.random_range(5..=6);
@@ -182,18 +182,18 @@ pub async fn run(tm: TextureManager, mut score: i32, mut highscore: i32) -> (Str
 
         // Enemy Movement
         for enemy in &mut enemies {
-            enemy.image.set_x(enemy.image.get_x() + enemy_dir * 2.0);
+            enemy.image.set_x(enemy.image.get_x() + enemy_speed * 2.0);
         }
 
-        let leftmost = enemies.iter().map(|e| e.image.get_x()).reduce(f32::min).unwrap_or(0.0);
-        let rightmost = enemies.iter().map(|e| e.image.get_x()).reduce(f32::max).unwrap_or(0.0);
+        let leftside = enemies.iter().map(|e| e.image.get_x()).reduce(f32::min).unwrap_or(0.0);
+        let rightside = enemies.iter().map(|e| e.image.get_x()).reduce(f32::max).unwrap_or(0.0);
 
-        if rightmost >= max_x || leftmost <= min_x {
+        if rightside >= max_x || leftside <= min_x {
             for enemy in &mut enemies {
-                enemy.image.set_x(enemy.image.get_x() - enemy_dir * 2.0);
+                enemy.image.set_x(enemy.image.get_x() - enemy_speed * 2.0);
                 enemy.image.set_y(enemy.image.get_y() + 25.0);
             }
-            enemy_dir *= -1.0;
+            enemy_speed *= -1.0;
         }
 
         // Lose Code
