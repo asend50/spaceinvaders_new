@@ -3,6 +3,7 @@ use crate::ui::still_image::StillImage;
 use crate::utils::preload_image::TextureManager;
 use crate::utils::collision::check_collision;
 use crate::ui::text_button::TextButton;
+use ::rand::Rng;
 use crate::custom::player::Player;
 use crate::custom::bullet::Bullet;
 use crate::custom::enemy::Enemy;
@@ -66,28 +67,35 @@ let btn_return = TextButton::new(
 
 let mut lbl_score = Label::new(format!("Score:\n{}", score), 25.0, 125.0, 45);
 let mut lbl_highscore = Label::new(format!("Highscore:\n{}", highscore), 815.0, 125.0, 45);
+let mut rng = ::rand::rng();
 
 let mut bullets: Vec<Bullet> = Vec::new();
 let mut enemies: Vec<Enemy> = Vec::new();
-let columns = 6;
-let rows = 4;
+let mut columns = 0;
+let mut rows = 0;
 let spacing_x = screen_width() * 0.08;
 let spacing_y = screen_height() * 0.09;
 let mut enemy_dir = 0.2;
 let min_x = 230.0;
-let max_x = 730.0;
+let max_x = 740.0;
+
+let random_columns: i32 = rng.random_range(5..=6);
+let random_rows: i32 = rng.random_range(4..=6);
+
+columns = random_columns;
+rows = random_rows;
 
 for row in 0..rows {
     for col in 0..columns {
-        let enemy = Enemy::new(
+        let enemy = Enemy::from_preload(
+            tm.get_preload("assets/enemy.png").unwrap(),
             240.0 + col as f32 * spacing_x,
             25.0 + row as f32 * spacing_y,
             screen_width() * 0.055,
             screen_height() * 0.065,
-            "assets/enemy.png",
             true,
             1.0,
-        ).await;
+        );
         enemies.push(enemy);
     }
 }
@@ -160,7 +168,25 @@ let mut shoot_cooldown = 0.0;
         }
 
         if enemies.is_empty() {
-            return ("win".to_string(), tm, score, highscore);
+            let random_columns: i32 = rng.random_range(5..=6);
+            let random_rows: i32 = rng.random_range(3..=4);
+
+            columns = random_columns;
+            rows = random_rows;
+            for row in 0..rows {
+                for col in 0..columns {
+                    let enemy = Enemy::from_preload(
+                        tm.get_preload("assets/enemy.png").unwrap(),
+                        240.0 + col as f32 * spacing_x,
+                        25.0 + row as f32 * spacing_y,
+                        screen_width() * 0.055,
+                        screen_height() * 0.065,
+                        true,
+                        1.0,
+                    );
+                    enemies.push(enemy);
+                }
+            }
         }
     }
 
@@ -200,6 +226,7 @@ if is_key_down(KeyCode::Space) && get_time() - last_shot > 1.0 {
         }
 
     if btn_return.click() {
+        score = 0;
             return("menu".to_string(),tm, score, highscore);
         }
 
