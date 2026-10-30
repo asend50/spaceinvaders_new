@@ -1,7 +1,7 @@
 /*
-By: <Your Name Here>
+By: <Asen Doiron>
 Date: 2026-10-07
-Program Details: <Program Description Here>
+Program Details: <The purpose of this program is to allow the player to fight against infinite waves of enemies in a spaceship, gaining points as they get kills, while also preventing the enemies from reaching them.>
 */
 
 mod ui;
@@ -25,7 +25,7 @@ fn window_conf() -> Conf {
         window_height: 768,
         fullscreen: false,
         high_dpi: true,
-        window_resizable: true,
+        window_resizable: false,
         sample_count: 4, // MSAA: makes shapes look smoother
         ..Default::default()
     }
